@@ -1,4 +1,4 @@
-from __future__ import with_statement
+#!/home/tgolden/apps/bin/python2.7
 
 import re
 import smtplib
@@ -43,13 +43,13 @@ class Mailer(object):
         server.starttls()
         server.ehlo()
         server.login(self.sender, self.sender_password)
-        server.sendmail(self.sender, self.recipients, 
+        server.sendmail(self.sender, self.recipients,
                         mime_text.as_string())
         server.rset()
         server.quit()
 
 def git_config_get(name):
-    p = subprocess.Popen(['git', 'config', '--get', name], 
+    p = subprocess.Popen(['git', 'config', '--get', name],
                          stdout=subprocess.PIPE)
     # Cut off the last \n character.
     return p.stdout.read()[:-1]
@@ -68,10 +68,10 @@ def git_rev_parse(hash, short=False):
     return p.stdout.read()[:-1]
 
 def get_commit_info(hash):
-    p = subprocess.Popen(['git', 'show', '--pretty=format:%s%n%h', '-s', hash], 
+    p = subprocess.Popen(['git', 'show', '--pretty=format:%s%n%h', '-s', hash],
                          stdout=subprocess.PIPE)
     s = StringIO(p.stdout.read())
-    def undefined(): 
+    def undefined():
         return 'undefined'
     info = defaultdict(undefined)
     for k in ['message', 'hash']:
@@ -82,7 +82,7 @@ def process_commits(commits, mailer, subject_prefix, subject_template):
     for ref_name in commits.keys():
         use_index = len(commits[ref_name]) > 1
         if not subject_template:
-            subject_template = ('%(prefix)s %(ref_name)s commit ' + 
+            subject_template = ('%(prefix)s %(ref_name)s commit ' +
                                 ('(#%(index)s) ' if use_index else '') +
                                 '%(hash)s')
         for i, commit in enumerate(commits[ref_name]):
@@ -96,11 +96,11 @@ def process_commits(commits, mailer, subject_prefix, subject_template):
             assert match
             reply_to = match.group(1)
             mailer.send(subject, reply_to, message)
-            
+
 
 def get_commits(old_rev, new_rev):
-    p = subprocess.Popen(['git', 'log', '--pretty=format:%H', '--reverse',  
-                          '%s..%s' % (old_rev, new_rev)], 
+    p = subprocess.Popen(['git', 'log', '--pretty=format:%H', '--reverse',
+                          '%s..%s' % (old_rev, new_rev)],
                          stdout=subprocess.PIPE)
     return p.stdout.read().split('\n')
 
