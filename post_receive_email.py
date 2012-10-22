@@ -45,7 +45,7 @@ class Mailer(object):
         server.starttls()
         server.ehlo()
         server.login(self.sender, self.sender_password)
-        server.sendmail(self.sender, self.recipients,
+        server.sendmail(SENDER_EMAIL, self.recipients,
                         mime_text.as_string())
         server.rset()
         server.quit()
