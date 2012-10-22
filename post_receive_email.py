@@ -19,6 +19,8 @@ SMTP_SENDER = 'hooks.smtp-sender'
 SMTP_SENDER_PASSWORD = 'hooks.smtp-sender-password'
 POST_RECEIVE_LOGFILE = 'hooks.post-receive-logfile'
 
+SENDER_EMAIL = "git@timgolden.me.uk"
+
 class Mailer(object):
     def __init__(self, smtp_host, smtp_port,
                  sender, sender_password, recipients):
@@ -33,7 +35,7 @@ class Mailer(object):
             return
 
         mime_text = MIMEText(message, _charset='utf-8')
-        mime_text['From'] = self.sender
+        mime_text['From'] = SENDER_EMAIL
         mime_text['Reply-To'] = reply_to
         mime_text['To'] = ', '.join(self.recipients)
         mime_text['Subject'] = subject
