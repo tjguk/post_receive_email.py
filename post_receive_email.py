@@ -58,7 +58,12 @@ def git_config_get(name):
 
 def git_show(hash):
     p = subprocess.Popen(['git', 'show', hash], stdout=subprocess.PIPE)
-    return p.stdout.read()
+    lines = []
+    for line in p.stdout.readlines():
+      if line.startswith("diff --git"):
+        break
+      lines.append(line)
+    return "".join(lines)
 
 def git_rev_parse(hash, short=False):
     args = ['git', 'rev-parse']
